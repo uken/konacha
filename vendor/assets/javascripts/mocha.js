@@ -4787,7 +4787,8 @@ Runner.prototype.fail = function(test, err) {
   test.state = 'failed';
 
   if (!(err instanceof Error)) {
-    err = new Error('the ' + type(err) + ' ' + stringify(err) + ' was thrown, throw an Error :)');
+    console.warn('the ' + type(err) + ' ' + stringify(err) + ' was thrown, throw an Error :)')
+    console.warn('THIS MIGHT BREAK! err must have a .stack property');
   }
 
   err.stack = (this.fullStackTrace || !err.stack)
