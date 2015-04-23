@@ -40,10 +40,10 @@ module Konacha
         Rails.application.assets.each_file.find_all { |path|
           pathname = Pathname.new(path)
           config.spec_matcher === pathname.basename.to_s &&
-          (pathname.extname == '.js'
-            || pathname.extname == '.es6'
-            || pathname.extname == '.jsx'
-            || Tilt[pathname])
+          ( pathname.extname == '.js'  ||
+            pathname.extname == '.es6' ||
+            pathname.extname == '.jsx' ||
+            Tilt[pathname])
         }.map { |pathname|
           pathname.to_s.gsub(File.join(root, ''), '')
         }.sort
