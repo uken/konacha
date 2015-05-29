@@ -24,7 +24,7 @@ module Konacha
     end
 
     def asset_name
-      path.sub(/(\.js|\.coffee).*/, '')
+      path.sub(/(\.js|\.coffee|\.es6).*/, '')
     end
   end
 end

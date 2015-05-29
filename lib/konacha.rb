@@ -49,7 +49,10 @@ module Konacha
           paths = Rails.application.assets.each_file.find_all { |path|
             pathname = Pathname.new(path)
             config.spec_matcher === pathname.basename.to_s &&
-              (pathname.extname == '.js' || Tilt[pathname])
+              ( pathname.extname == '.js'  ||
+                pathname.extname == '.es6' ||
+                pathname.extname == '.jsx' ||
+                Tilt[pathname])
           }
         else
           raise NotImplementedError.new("Konacha is not compatible with the version of Sprockets used by your application.")
