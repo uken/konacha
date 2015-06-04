@@ -2053,8 +2053,8 @@ exports.colors = {
   , 'green': 32
   , 'light': 90
   , 'diff gutter': 90
-  , 'diff added': 42
-  , 'diff removed': 41
+  , 'diff added': 32
+  , 'diff removed': 31
 };
 
 /**
@@ -2176,8 +2176,8 @@ exports.list = function(failures){
     if (err.showDiff !== false && sameType(actual, expected)
         && expected !== undefined) {
 
-      if ('string' !== typeof actual) {
-        escape = false;
+      escape = false;
+      if (!(utils.isString(actual) && utils.isString(expected))) {
         err.actual = actual = utils.stringify(actual);
         err.expected = expected = utils.stringify(expected);
       }
@@ -4787,8 +4787,7 @@ Runner.prototype.fail = function(test, err) {
   test.state = 'failed';
 
   if (!(err instanceof Error)) {
-    console.warn('the ' + type(err) + ' ' + stringify(err) + ' was thrown, throw an Error :)')
-    console.warn('THIS MIGHT BREAK! err must have a .stack property');
+    err = new Error('the ' + type(err) + ' ' + stringify(err) + ' was thrown, throw an Error :)');
   }
 
   err.stack = (this.fullStackTrace || !err.stack)
@@ -5754,6 +5753,17 @@ exports.forEach = function(arr, fn, scope){
 };
 
 /**
+ * Test if the given obj is type of string
+ *
+ * @param {Object} obj
+ * @returns Boolean
+ */
+
+exports.isString = function(obj) {
+  return 'string' === typeof obj;
+};
+
+/**
  * Array#map (<=IE8)
  *
  * @param {Array} array
@@ -6151,7 +6161,10 @@ function jsonStringify(object, spaces, depth) {
           : val.toString();
         break;
       case 'date':
-        val = '[Date: ' + val.toISOString() + ']';
+        var sDate = isNaN(val.getTime())        // Invalid date
+          ? val.toString()
+          : val.toISOString();
+        val = '[Date: ' + sDate + ']';
         break;
       case 'buffer':
         var json = val.toJSON();
@@ -6162,7 +6175,7 @@ function jsonStringify(object, spaces, depth) {
       default:
         val = (val == '[Function]' || val == '[Circular]')
           ? val
-          : '"' + val + '"'; //string
+          : JSON.stringify(val); //string
     }
     return val;
   }
@@ -6354,7 +6367,7 @@ exports.stackTraceFilter = function() {
       : { browser: true }
     , cwd = is.node
       ? process.cwd() + slash
-      : location.href.replace(/\/[^\/]*$/, '/');
+      : (typeof location === 'undefined' ? window.location : location).href.replace(/\/[^\/]*$/, '/');
 
   function isNodeModule (line) {
     return (~line.indexOf('node_modules'));
