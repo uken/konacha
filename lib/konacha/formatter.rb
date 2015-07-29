@@ -15,17 +15,17 @@ module Konacha
 
     def example_passed(example)
       @examples << example
-      io.write(with_color('.', :green))
+      io.write(with_color('.', 32))
     end
 
     def example_failed(example)
       @examples << example
-      io.write(with_color('F', :red))
+      io.write(with_color('F', 31))
     end
 
     def example_pending(example)
       @examples << example
-      io.write(with_color('P', :yellow))
+      io.write(with_color('P', 33))
     end
 
     def example_group_finished(group); end
@@ -74,7 +74,7 @@ module Konacha
     end
 
     def pending_message(example)
-      with_color("  Pending: #{example.full_description}", :yellow)
+      with_color("  Pending: #{example.full_description}", 33)
     end
 
     def color_enabled?
@@ -83,7 +83,7 @@ module Konacha
 
     def with_color(text, color)
       return text unless color_enabled?
-      text.colorize(color)
+      "\e[0;\e[#{color}m#{text}\e[0m"
     end
   end
 end
