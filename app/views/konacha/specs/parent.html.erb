@@ -4,14 +4,22 @@
     <meta http-equiv="content-type" content="text/html;charset=utf-8" />
     <title>Konacha Tests</title>
     <%= stylesheet_link_tag "konacha", :debug => false %>
-    <%= javascript_include_tag "mocha", "chai", :debug => false %>
-    <%= javascript_include_tag("konacha/runner", :debug => false) if @run_mode.runner? %>
-    <%= javascript_include_tag *@javascripts, "konacha/parent", debug: false %>
   </head>
   <body>
+    <div id="mocha"></div>
+    <%= javascript_include_tag "mocha", "chai", :debug => false %>
+    <script>
+      var expect = chai.expect,
+        should = chai.should(),
+        assert = chai.assert;
+    </script>
+    <%= javascript_include_tag("konacha/runner", :debug => false) if @run_mode.runner? %>
+    <%= javascript_include_tag *@javascripts, debug: false %>
     <% @specs.each do |spec| %>
       <%= javascript_include_tag spec.asset_name %>
     <% end %>
-    <div id="mocha"></div>
+    <script>
+      mocha.run();
+    </script>
   </body>
 </html>
